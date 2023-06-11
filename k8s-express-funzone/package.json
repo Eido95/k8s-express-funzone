@@ -1,0 +1,14 @@
+{
+  "name": "k8s-express-funzone",
+  "version": "1.0.0",
+  "description": "K8s Express Fun Zone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eido Askayo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

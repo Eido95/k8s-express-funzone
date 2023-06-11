@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-express-funzone-deployment
+  labels:
+    app: k8s-express-funzone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-express-funzone
+  template:
+    metadata:
+      labels:
+        app: k8s-express-funzone
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: k8s-express-funzone
+          image: gryphon2411/k8s-express-funzone:latest
+          ports:
+            - containerPort: 3000
