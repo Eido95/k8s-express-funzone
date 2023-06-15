@@ -12,3 +12,6 @@ spec:
       port: 80
       targetPort: 3000
   type: LoadBalancer
+  externalIPs:
+    - 10.108.54.131
+    - 10.108.54.132
