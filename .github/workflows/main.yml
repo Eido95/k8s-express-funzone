@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v4.1.1
         with:
           # The build context (https://docs.docker.com/build/building/context/)
-          context: .
+          context: k8s-express-funzone/
           # Filepath to the Dockerfile
           file: ./Dockerfile
           # Tells the action to upload the image to a registry after building it.
