@@ -5,8 +5,9 @@ const app = express()
 const port = 3000
 
 app.get('/', (request, response) => {
+  const hostname = run("hostname");
   const ip = run("hostname -I");
-  response.send('Fun Zone! ' + ip)
+  response.send(`Fun Zone! (hostname: ${hostname}) (ip: ${ip})`);
 })
 
 app.listen(port, () => {
