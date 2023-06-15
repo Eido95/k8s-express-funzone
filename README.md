@@ -5,6 +5,13 @@
 
 # Setup
 
+## CI
+
+1. https://docs.docker.com/build/ci/github-actions/
+2. Create a `.github/workflows/main.yml` file.
+
+## App and k8s
+
 To create and deploy a "Fun Zone" Express.js app to Kubernetes (k8s), you'll need to follow a few steps. Here's a high-level overview of the process:
 
 1. Set up your development environment:
