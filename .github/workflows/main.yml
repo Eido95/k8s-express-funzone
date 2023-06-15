@@ -31,10 +31,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4.1.1
         with:
-          # The build context (https://docs.docker.com/build/building/context/)
+          # The build context (https://docs.docker.com/build/building/context/), default is "."
           context: k8s-express-funzone/
-          # Filepath to the Dockerfile
-          file: ./Dockerfile
+          # Filepath to the Dockerfile, default is "./Dockerfile"
+          file: k8s-express-funzone/Dockerfile
           # Tells the action to upload the image to a registry after building it.
           push: true
           # Tags that specify where to push the image.
