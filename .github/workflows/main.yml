@@ -5,7 +5,9 @@ name: ci
 on:
   push:
     branches:
-      - "master"
+      - master
+    paths:
+      - k8s-express-funzone/**
 
 # Creates a job ID (build) and declares the type of machine that the job should run on.
 jobs:
