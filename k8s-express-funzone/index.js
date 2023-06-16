@@ -1,13 +1,18 @@
 const express = require('express')
 const { execSync } = require('child_process')
+const path = require('path');
+
+const uselessfacts = require('./uselessfacts')
 
 const app = express()
 const port = 3000
 
 app.get('/', (request, response) => {
-  const hostname = run("hostname");
-  const ip = run("hostname -I");
-  response.send(`Fun Zone! (hostname: ${hostname}) (ip: ${ip})`);
+  response.send({
+    "app": path.basename(module.filename),
+    "hostname": run("hostname"),
+    "ips": run("hostname -I")
+    })
 })
 
 app.listen(port, () => {

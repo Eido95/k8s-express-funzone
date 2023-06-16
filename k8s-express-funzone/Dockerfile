@@ -13,8 +13,11 @@ RUN npm install
 # Copy the rest of the app source code to the container
 COPY . .
 
-# Expose the port on which the app will run
+# Expose the port on which the index app will run
 EXPOSE 3000
+
+# Expose the port on which the uselessfacts app will run
+EXPOSE 4000
 
 # Define the command to run the app when the container starts
 CMD [ "node", "index.js" ]
