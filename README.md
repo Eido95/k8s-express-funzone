@@ -7,7 +7,7 @@
 
 ## CI
 
-1. https://docs.docker.com/build/ci/github-actions/
+1. [Introduction to GitHub Actions | Configure CI/CD](https://docs.docker.com/build/ci/github-actions/)
 2. Create a `.github/workflows/main.yml` file.
 
 ## App and k8s
