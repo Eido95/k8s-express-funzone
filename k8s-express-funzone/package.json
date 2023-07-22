@@ -1,7 +1,7 @@
 {
   "name": "k8s-express-funzone",
   "version": "1.0.0",
-  "description": "K8s Express Fun Zone",
+  "description": "k8s Express Fun Zone",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

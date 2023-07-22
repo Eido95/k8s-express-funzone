@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 })
 
 app.listen(port, () => {
-  console.log(`K8s Express Fun Zone app listening on port ${port}`)
+  console.log(`k8s Express Fun Zone app listening on port ${port}`)
 })
 
 function run(command) {

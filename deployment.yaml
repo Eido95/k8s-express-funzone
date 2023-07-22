@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8s-express-funzone-deployment
+  name: k8s-funzone-deployment
   labels:
-    app: k8s-express-funzone
+    app: k8s-funzone
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: k8s-express-funzone
+      app: k8s-funzone
   template:
     metadata:
       labels:
-        app: k8s-express-funzone
+        app: k8s-funzone
     spec:
       imagePullSecrets:
         - name: regcred
@@ -20,4 +20,7 @@ spec:
         - name: k8s-express-funzone
           image: gryphon2411/k8s-express-funzone:latest
           ports:
-            - containerPort: 3000
+            - name: index
+              containerPort: 3000
+            - name: uselessfacts
+              containerPort: 4000

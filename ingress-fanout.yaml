@@ -3,27 +3,29 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
-  name: k8s-express-funzone-ingress-fanout
+  name: k8s-funzone-ingress-fanout
 spec:
   rules:
-  - host: k8s-express-funzone.com
+  - host: k8s-funzone.com
     http:
       paths:
       - path: /         
         pathType: ImplementationSpecific          
         backend:
           service:
-            name: k8s-express-funzone-service
+            name: k8s-funzone-service
             port:
               number: 80
       - path: /uselessfacts
         pathType: ImplementationSpecific
         backend:
           service:
-            name: k8s-express-funzone-service
+            name: k8s-funzone-service
             port:
               number: 81
 
+# minikube start --cni=calico
+# minikube addons enable ingress
 # minikube ip
 # sudo vim /etc/hosts
-# Add: <minikube ip> k8s-express-funzone.com
+# Add: <minikube ip> k8s-funzone.com
