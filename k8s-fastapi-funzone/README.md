@@ -1,6 +1,7 @@
 # Components
 
 - Container registry: Docker Hub
+- Runtime: Python 3.10
 
 # Setup
 
