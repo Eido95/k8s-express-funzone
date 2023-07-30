@@ -1,6 +1,7 @@
 # Components
 
 - Container registry: Docker Hub
+- Runtime: Node.js 18
 
 # Setup
 
