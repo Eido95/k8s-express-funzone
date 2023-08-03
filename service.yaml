@@ -8,14 +8,18 @@ spec:
   selector:
     app: k8s-funzone
   ports:
-    - name: index
+    - name: express-index
       protocol: TCP
       port: 80
       targetPort: 3000
-    - name: uselessfacts
+    - name: express-uselessfacts
       protocol: TCP
       port: 81
       targetPort: 4000
+    - name: fastapi
+      protocol: TCP
+      port: 82
+      targetPort: 5000
   type: LoadBalancer
   externalIPs:
     - 10.108.54.131

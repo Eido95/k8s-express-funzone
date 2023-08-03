@@ -23,6 +23,13 @@ spec:
             name: k8s-funzone-service
             port:
               number: 81
+      - path: /fastapi
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: k8s-funzone-service
+            port:
+              number: 82
 
 # minikube start --cni=calico
 # minikube addons enable ingress

@@ -6,7 +6,7 @@ metadata:
   name: k8s-funzone-ingress-virtual-hosting
 spec:
   rules:
-  - host: index.k8s-funzone.com
+  - host: index.express.k8s-funzone.com
     http:
       paths:
       - backend:
@@ -16,7 +16,7 @@ spec:
               number: 80
         path: /
         pathType: ImplementationSpecific
-  - host: uselessfacts.k8s-funzone.com
+  - host: uselessfacts.express.k8s-funzone.com
     http:
       paths:
       - backend:
@@ -26,9 +26,19 @@ spec:
               number: 81
         path: /
         pathType: ImplementationSpecific
+  - host: fastapi.k8s-funzone.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: k8s-funzone-service
+            port:
+              number: 82
+        path: /
+        pathType: ImplementationSpecific
 
 # minikube start --cni=calico
 # minikube addons enable ingress
 # minikube ip
 # sudo vim /etc/hosts
-# Add: <minikube ip> index.k8s-funzone.com uselessfacts.k8s-funzone.com
+# Add: <minikube ip> index.express.k8s-funzone.com uselessfacts.express.k8s-funzone.com fastapi.k8s-funzone.com

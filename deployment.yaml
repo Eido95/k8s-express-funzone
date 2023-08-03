@@ -24,3 +24,7 @@ spec:
               containerPort: 3000
             - name: uselessfacts
               containerPort: 4000
+        - name: k8s-fastapi-funzone
+          image: gryphon2411/k8s-fastapi-funzone:latest
+          ports:
+            - containerPort: 5000
