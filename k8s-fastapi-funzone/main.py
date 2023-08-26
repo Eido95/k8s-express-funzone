@@ -5,6 +5,9 @@ from fastapi import FastAPI
 from starlette.responses import Response
 from uvicorn.config import logger
 
+from messages.pika_consume import start_string_consuming
+from messages.pika_produce import produce_string
+
 app = FastAPI()
 
 logger.info(f"k8s FastAPI Fun Zone app")
@@ -21,6 +24,19 @@ async def handle_not_found(request, exception):
 @app.get("/")
 async def root():
     return get_response_body()
+
+
+@app.get("/pika/produce/string")
+async def pika_produce_string():
+    response_body = get_response_body()
+    body = (f'app {response_body["app"]}, hostname {response_body["hostname"]}, '
+            f'ips {response_body["ips"]}')
+    return produce_string(body)
+
+
+@app.get("/pika/consume/string")
+async def pika_consume_string():
+    return start_string_consuming()
 
 
 def get_response_body():
