@@ -1,0 +1,15 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: k8s-funzone-messages-broker-rabbitmq
+spec:
+  replicas: 3
+  service:
+    type: LoadBalancer
+
+
+# Fix multi-node storage access in Minikube
+# kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+# kubectl apply -f messages-broker-rabbitmq.yaml
+# kubectl get rmq
+# kubectl logs k8s-funzone-messages-broker-rabbitmq-server-0
