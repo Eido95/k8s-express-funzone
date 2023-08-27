@@ -36,7 +36,7 @@ async def pika_produce_string():
 
 @app.get("/pika/consume/string")
 async def pika_consume_string():
-    return start_string_consuming()
+    return await start_string_consuming()
 
 
 def get_response_body():

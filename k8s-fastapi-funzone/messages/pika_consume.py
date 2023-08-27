@@ -1,4 +1,4 @@
-from threading import Thread
+import asyncio
 
 from pika.channel import Channel
 from pika.spec import Basic, BasicProperties
@@ -7,12 +7,12 @@ from uvicorn.config import logger
 from messages.pika_common import establish_broker_connection, STRING_QUEUE_NAME, create_queue
 
 
-def start_string_consuming():
+async def start_string_consuming():
     channel, connection = establish_broker_connection()
     create_queue(channel, STRING_QUEUE_NAME)
 
     channel.basic_consume(STRING_QUEUE_NAME, callback, auto_ack=True)
-    Thread(target=channel.start_consuming).start()
+    start_consuming_task = asyncio.create_task(asyncio.to_thread(channel.start_consuming))
     consuming_status = f"[{STRING_QUEUE_NAME}] Waiting for messages. To exit press CTRL+C"
     logger.info(consuming_status)
 
