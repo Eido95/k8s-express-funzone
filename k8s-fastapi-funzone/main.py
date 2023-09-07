@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from starlette.responses import Response
 from uvicorn.config import logger
 
+from log.ecs_log import logger as ecs_logger
 from messages.pika_consume import start_string_consuming
 from messages.pika_produce import produce_string
 
@@ -23,6 +24,7 @@ async def handle_not_found(request, exception):
 
 @app.get("/")
 async def root():
+    ecs_logger.debug("Responding to / request", extra={"http.request.method": "get"})
     return get_response_body()
 
 
