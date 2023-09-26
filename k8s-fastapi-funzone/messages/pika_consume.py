@@ -4,7 +4,8 @@ from pika.channel import Channel
 from pika.spec import Basic, BasicProperties
 from uvicorn.config import logger
 
-from messages.pika_common import establish_broker_connection, STRING_QUEUE_NAME, create_queue
+from messages.common import STRING_QUEUE_NAME
+from messages.pika_common import establish_broker_connection, create_queue
 
 
 async def start_string_consuming():

@@ -1,7 +1,7 @@
 from uvicorn.config import logger
 
-from messages.pika_common import establish_broker_connection, create_queue, EXCHANGE, flush_network_buffers, \
-    STRING_QUEUE_NAME
+from messages.common import STRING_QUEUE_NAME, EXCHANGE
+from messages.pika_common import establish_broker_connection, create_queue, flush_network_buffers
 
 
 def produce_string(body):

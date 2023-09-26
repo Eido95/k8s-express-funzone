@@ -31,7 +31,7 @@ async def root():
 @app.get("/pika/produce/string")
 async def pika_produce_string():
     response_body = get_response_body()
-    body = (f'app {response_body["app"]}, hostname {response_body["hostname"]}, '
+    body = (f'library "pika", app {response_body["app"]}, hostname {response_body["hostname"]}, '
             f'ips {response_body["ips"]}')
     return produce_string(body)
 
