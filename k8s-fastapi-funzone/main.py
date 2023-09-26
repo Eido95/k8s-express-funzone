@@ -6,7 +6,7 @@ from starlette.responses import Response
 from uvicorn.config import logger
 
 from log.ecs_log import logger as ecs_logger
-from messages.pika_consume import start_string_consuming
+from messages.pika_consume import start_string_consuming, stop_string_consuming
 from messages.pika_produce import produce_string
 
 app = FastAPI()
@@ -39,6 +39,11 @@ async def pika_produce_string():
 @app.get("/pika/consume/string")
 async def pika_consume_string():
     return await start_string_consuming()
+
+
+@app.get("/pika/stop-consume/string")
+async def pika_stop_consume_string():
+    return await stop_string_consuming()
 
 
 def get_response_body():
