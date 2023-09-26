@@ -13,3 +13,13 @@ spec:
 # kubectl apply -f messages-broker-rabbitmq.yaml
 # kubectl get rmq
 # kubectl logs k8s-funzone-messages-broker-rabbitmq-server-0
+
+# minikube tunnel
+# minikube service k8s-funzone-messages-broker-rabbitmq | grep management
+# Go to http://<management-URL>/users
+# Add user:
+# - username: k8s-funzone-apps
+# - password: cvCB59XUYHL9x49
+# - no tags
+# Go to http://<management-URL>/users/k8s-funzone-apps
+# Click "Set permission"
