@@ -6,8 +6,8 @@ from starlette.responses import Response
 from uvicorn.config import logger
 
 from log.ecs_log import logger as ecs_logger
-from messages.pika_consume import start_string_consuming, stop_string_consuming
-from messages.pika_produce import produce_string
+from messages import (pika_queue_consume, pika_queue_produce, pika_task_produce,
+                      pika_task_worker_consume)
 
 app = FastAPI()
 
@@ -28,22 +28,40 @@ async def root():
     return get_response_body()
 
 
-@app.get("/pika/produce/string")
-async def pika_produce_string():
+@app.post("/pika/queue/produce/string")
+async def pika_queue_produce_string():
     response_body = get_response_body()
     body = (f'library "pika", app {response_body["app"]}, hostname {response_body["hostname"]}, '
             f'ips {response_body["ips"]}')
-    return produce_string(body)
+    return pika_queue_produce.produce_string(body)
 
 
-@app.get("/pika/consume/string")
-async def pika_consume_string():
-    return await start_string_consuming()
+@app.post("/pika/queue/consume/string")
+async def pika_queue_consume_string():
+    return await pika_queue_consume.start_string_consuming()
 
 
-@app.get("/pika/stop-consume/string")
-async def pika_stop_consume_string():
-    return await stop_string_consuming()
+@app.delete("/pika/queue/consume/string")
+async def pika_queue_stop_consume_string():
+    return await pika_queue_consume.stop_string_consuming()
+
+
+@app.post("/pika/task/produce")
+async def pika_produce_task():
+    response_body = get_response_body()
+    body = (f'library "pika", app {response_body["app"]}, hostname {response_body["hostname"]}, '
+            f'ips {response_body["ips"]}')
+    return pika_task_produce.produce_task(body)
+
+
+@app.post("/pika/task/consume")
+async def pika_consume_task():
+    return await pika_task_worker_consume.start_consuming()
+
+
+@app.delete("/pika/task/consume")
+async def pika_stop_task_consume():
+    return await pika_task_worker_consume.stop_consuming()
 
 
 def get_response_body():

@@ -5,3 +5,4 @@ PORT = "5672"  # default
 VIRTUAL_HOST = "/"  # default
 EXCHANGE = ''  # default
 STRING_QUEUE_NAME = 'queue-string'
+TASK_QUEUE_NAME = 'queue-task'

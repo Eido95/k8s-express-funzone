@@ -1,3 +1,4 @@
+# 1 "Hello World!"
 from uvicorn.config import logger
 
 from messages.common import STRING_QUEUE_NAME, EXCHANGE
