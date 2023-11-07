@@ -223,11 +223,10 @@ spec:
     metricbeat:
       autodiscover:
         providers:
-        - hints:
-            default_config: {}
-            enabled: "true"
+        - type: kubernetes
           node: ${NODE_NAME}
-          type: kubernetes
+          hints.enabled: true
+          hints.default_config: {}
       modules:
       - module: system
         period: 10s
@@ -256,6 +255,7 @@ spec:
                 system:
                   filesystem:
                     mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib)($|/)
+      # Node metrics, from kubelet
       - module: kubernetes
         period: 10s
         node: ${NODE_NAME}
@@ -283,8 +283,13 @@ spec:
           co.elastic.logs/json.add_error_key: 'true'
           co.elastic.logs/json.expand_keys: 'true'
       spec:
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true # Allows to provide richer host metadata
         serviceAccountName: k8s-funzone-beat-metricbeat
         automountServiceAccountToken: true # some older Beat versions are depending on this settings presence in k8s context
+        terminationGracePeriodSeconds: 30
+        securityContext:
+          runAsUser: 0
         containers:
         - name: metricbeat
           args:
@@ -293,32 +298,27 @@ spec:
           - /etc/beat.yml
           - -system.hostfs=/hostfs
           volumeMounts:
-          - mountPath: /hostfs/sys/fs/cgroup
-            name: cgroup
-          - mountPath: /var/run/docker.sock
-            name: dockersock
-          - mountPath: /hostfs/proc
-            name: proc
+          - name: cgroup
+            mountPath: /hostfs/sys/fs/cgroup
+          - name: dockersock
+            mountPath: /var/run/docker.sock
+          - name: proc
+            mountPath: /hostfs/proc
           env:
           - name: NODE_NAME
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
-        dnsPolicy: ClusterFirstWithHostNet
-        hostNetwork: true # Allows to provide richer host metadata
-        securityContext:
-          runAsUser: 0
-        terminationGracePeriodSeconds: 30
         volumes:
-        - hostPath:
+        - name: cgroup
+          hostPath:
             path: /sys/fs/cgroup
-          name: cgroup
-        - hostPath:
+        - name: dockersock
+          hostPath:
             path: /var/run/docker.sock
-          name: dockersock
-        - hostPath:
+        - name: proc
+          hostPath:
             path: /proc
-          name: proc
 ---
 # permissions needed for metricbeat
 # source: https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-kubernetes.html
@@ -327,45 +327,20 @@ kind: ClusterRole
 metadata:
   name: k8s-funzone-beat-metricbeat
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  - namespaces
-  - events
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - "extensions"
-  resources:
-  - replicasets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - statefulsets
-  - deployments
-  - replicasets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - nodes/stats
-  verbs:
-  - get
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
+- apiGroups: [""]
+  resources: ["nodes", "namespaces", "events", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["statefulsets", "deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["nodes/stats"]
+  verbs: ["get"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
 ---
 apiVersion: v1
 kind: ServiceAccount
