@@ -375,19 +375,105 @@ spec:
     name: k8s-funzone
   config:
     heartbeat:
-      monitors:
-      - type: tcp
-        schedule: '@every 5s'
-        hosts: ["k8s-funzone-es-http.eck-system:9200"]
-      - type: tcp
-        schedule: '@every 5s'
-        hosts: ["k8s-funzone-kb-http.eck-system:5601"]
-      - type: tcp
-        schedule: '@every 5s'
-        hosts: ["k8s-funzone-service.default:80"]
+      autodiscover:
+        providers:
+          - type: kubernetes
+            resource: pod
+            scope: cluster
+            node: ${NODE_NAME}
+            hints.enabled: true
+            templates:
+              - condition: ~
+                config:
+                  - hosts: ["${data.host}:${data.port}"]
+                    name: ${data.kubernetes.pod.name} (${data.kubernetes.container.name})
+                    schedule: '@every 10s'
+                    timeout: 5s
+                    type: tcp
+        
+          - type: kubernetes
+            resource: service
+            scope: cluster
+            node: ${NODE_NAME}
+            hints.enabled: true
+            templates:
+              - condition: ~
+                config:
+                  - hosts: ["${data.host}:${data.port}"]
+                    name: ${data.kubernetes.service.name}
+                    schedule: '@every 10s'
+                    timeout: 5s
+                    type: tcp
+        
+          - type: kubernetes
+            resource: node
+            node: ${NODE_NAME}
+            scope: cluster
+            templates:
+              # Example, check SSH port of all cluster nodes:
+              - condition: ~
+                config:
+                  - hosts: ["${data.host}:${data.port}"]
+                    name: ${data.kubernetes.node.name}
+                    schedule: '@every 10s'
+                    timeout: 5s
+                    type: tcp
   deployment:
     replicas: 1
     podTemplate:
       spec:
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true # Allows to provide richer host metadata
+        serviceAccountName: k8s-funzone-beat-heartbeat
+        automountServiceAccountToken: true # some older Beat versions are depending on this settings presence in k8s context
+        terminationGracePeriodSeconds: 30
         securityContext:
           runAsUser: 0
+        containers:
+        - name: heartbeat
+          env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-funzone-beat-heartbeat
+  namespace: eck-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-funzone-beat-heartbeat
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - namespaces
+  - pods
+  - services
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+    - replicasets
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources:
+    - jobs
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-funzone-beat-heartbeat
+subjects:
+- kind: ServiceAccount
+  name: k8s-funzone-beat-heartbeat
+  namespace: eck-system
+roleRef:
+  kind: ClusterRole
+  name: k8s-funzone-beat-heartbeat
+  apiGroup: rbac.authorization.k8s.io
+---
