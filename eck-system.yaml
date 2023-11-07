@@ -360,4 +360,34 @@ roleRef:
   kind: ClusterRole
   name: k8s-funzone-beat-metricbeat
   apiGroup: rbac.authorization.k8s.io
-...
+---
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: k8s-funzone-heartbeat
+  namespace: eck-system
+spec:
+  type: heartbeat
+  version: 8.8.0
+  elasticsearchRef:
+    name: k8s-funzone
+  kibanaRef:
+    name: k8s-funzone
+  config:
+    heartbeat:
+      monitors:
+      - type: tcp
+        schedule: '@every 5s'
+        hosts: ["k8s-funzone-es-http.eck-system:9200"]
+      - type: tcp
+        schedule: '@every 5s'
+        hosts: ["k8s-funzone-kb-http.eck-system:5601"]
+      - type: tcp
+        schedule: '@every 5s'
+        hosts: ["k8s-funzone-service.default:80"]
+  deployment:
+    replicas: 1
+    podTemplate:
+      spec:
+        securityContext:
+          runAsUser: 0
