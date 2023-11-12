@@ -9,16 +9,14 @@
 # K: Kibana
 # Beats (Filebeat, Metricbeat)
 
-# minikube start --memory=max
+# minikube start --cpus=max --memory=max
 # kubectl create -f https://download.elastic.co/downloads/eck/2.9.0/crds.yaml
 # kubectl apply -f https://download.elastic.co/downloads/eck/2.9.0/operator.yaml
 # kubectl -n elastic-system get pod elastic-operator-0
 # minikube addons enable metrics-server
 # kubectl apply -f eck-system.yaml (takes ~10min)
 # minikube tunnel
-# Go to HTTPS URL: minikube service list | grep k8s-funzone-kb-http
-#   username: elastic
-#   password: echo $(kubectl -n eck-system get secret k8s-funzone-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode)
+# minikube service list | grep k8s-funzone-kb-http | awk '{print $8}' | sed 's/http:\/\//https:\/\//' && echo $(kubectl -n eck-system get secret k8s-funzone-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode)
 # Go to <HTTPS URL>/app/discover
 apiVersion: v1
 kind: Namespace
